@@ -2,6 +2,14 @@
 
 import numpy
 
+
+# Solutions() is used to validate different possible solutions and keep track
+# of any valid solutions.
+#
+# Each solution or test case is represented as a "board", which is a
+#  one-dimensional numpy array of integers. The array represents the
+#  row position of placed pieces (the index is the column. First row/col = 1.
+#
 class Solutions(object):
     def __init__(self, dim):
         self.solution_list = []
@@ -32,27 +40,25 @@ class Solutions(object):
         yield(temp_board)                   # 90 mirrored mirrored R
         yield(numpy.flipud(temp_board))     # 90 mirrored mirrored C and R
 
+    # Prints an ascii representation of a board to the console
+    def _print_board(self, board):
+        dims = len(board)
+        print("\n{}".format(board))
+        for row in range(1,dims+1):
+            rowstring=""
+            for col in board:
+                if col == row:
+                    rowstring += " x "
+                else:
+                    rowstring += " - "
+            print(rowstring)
+
 def test_queens():
     test_board = numpy.array([6,3,5,2,1,4])
-    solutions = Solutions(6)
+    solutions = Solutions(len(test_board))
     for test in solutions._variants(test_board):
-        print_board(test)
+        solutions._print_board(test)
 
-# Prints an ascii representation of the board to the console
-#   board = list or one-dimensional numpy array of integers, representing the
-#           row position of the pieces (the index is the column. First row/col = 1.
-#           Numbers beyond the dimensions of the board are not printed.
-def print_board(board):
-    dims = len(board)
-    print("\n{}".format(board))
-    for row in range(1,dims+1):
-        rowstring=""
-        for col in board:
-            if col == row:
-                rowstring += " x "
-            else:
-                rowstring += " - "
-        print(rowstring)
 
 if __name__ == "__main__":
     test_queens()
