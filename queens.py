@@ -25,7 +25,12 @@ class Solutions(object):
         temp_board = self.dim+1 - board
         yield(temp_board)                   # mirrored R
         yield(numpy.flipud(temp_board))     # mirrored C and R
-
+        temp_board = numpy.array([board.tolist().index(n)+1 for n in range(self.dim, 0, -1)])
+        yield (temp_board)                  # 90 degrees
+        yield (numpy.flipud(temp_board))    # 90 mirrored C
+        temp_board = self.dim+1 - temp_board
+        yield(temp_board)                   # 90 mirrored mirrored R
+        yield(numpy.flipud(temp_board))     # 90 mirrored mirrored C and R
 
 def test_queens():
     test_board = numpy.array([6,3,5,2,1,4])
