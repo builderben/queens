@@ -2,9 +2,36 @@
 
 import numpy
 
+class Solutions(object):
+    def __init__(self, dim):
+        self.solution_list = []
+        self.dim = dim
+
+    def add(self, board):
+        if self._is_unique(board):
+            self.solution_list.append(board)
+
+    def _is_unique(self, board):
+        for variant in self._variants(board):
+            for solution in self.solution_list:
+                if numpy.array_equal(variant, solution):
+                    return False # Board is not unique
+        return True  # Board is unique
+
+    # Get all flipped and rotated variants for comparison
+    def _variants(self, board):
+        yield(board)                        # identity
+        yield(numpy.flipud(board))          # mirrored C
+        temp_board = self.dim+1 - board
+        yield(temp_board)                   # mirrored R
+        yield(numpy.flipud(temp_board))     # mirrored C and R
+
+
 def test_queens():
-    test_board = numpy.array([2, 4, 1, 3])
-    print_board(test_board)
+    test_board = numpy.array([6,3,5,2,1,4])
+    solutions = Solutions(6)
+    for test in solutions._variants(test_board):
+        print_board(test)
 
 # Prints an ascii representation of the board to the console
 #   board = list or one-dimensional numpy array of integers, representing the
