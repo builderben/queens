@@ -17,7 +17,7 @@ class Solutions(object):
 
     def add(self, board):
         if self._is_unique(board):
-            self.solution_list.append(board)
+            self.solution_list.append(numpy.copy(board))
 
     def _is_unique(self, board):
         for variant in self._variants(board):
@@ -53,12 +53,62 @@ class Solutions(object):
                     rowstring += " - "
             print(rowstring)
 
-def test_queens():
-    test_board = numpy.array([6,3,5,2,1,4])
-    solutions = Solutions(len(test_board))
-    for test in solutions._variants(test_board):
-        solutions._print_board(test)
+    # print all solutions
+    def print_all(self):
+        for board in self.solution_list:
+            self._print_board(board)
 
+    # get number of solutions
+    def num_solutions(self):
+        return (len(self.solution_list))
+
+
+def solve_queens(pieces=8):
+    solutions = Solutions(pieces)
+    build_a_board = numpy.array([0 for i in range(0,pieces)])
+
+    # first piece only iterates over half the board. All other soultions
+    #  would be mirrored
+    for first_row in range(1, int(numpy.ceil(pieces / 2)) + 1):
+        build_a_board[0] = first_row
+        # remaining pieces will need to test all open spaces
+        piece_number = 1
+        test_row = 1
+        while(piece_number > 0):
+            placed_vector = build_a_board[:piece_number]
+            while(test_row < pieces+1):
+                if test_row not in build_a_board:
+                    if not threatened(placed_vector, test_row):
+                        # place the piece
+                        build_a_board[piece_number] = test_row
+                        if piece_number == pieces-1:
+                            # check for solution if we just placed the final piece
+                            solutions.add(build_a_board)
+                            build_a_board[piece_number] = 0
+                        break
+                test_row += 1
+            if build_a_board[piece_number] != 0:
+                piece_number += 1
+                test_row = 1
+            else:
+                piece_number -= 1
+                test_row = build_a_board[piece_number] + 1
+                build_a_board[piece_number] = 0
+
+    solutions.print_all()
+    print("{} unique solutions found for {} queens.\n".format(solutions.num_solutions(), pieces))
+
+# Checks if any already-placed pieces are threatened diagonally by a new piece in
+#  the designated row
+def threatened(placed_vector, row):
+    threat_check = placed_vector - numpy.array([t for t in range(row+len(placed_vector), row, -1)])
+    if 0 in threat_check:
+        return True
+    threat_check = placed_vector - numpy.array([t for t in range(row-len(placed_vector), row)])
+    if 0 in threat_check:
+        return True
+    return False
 
 if __name__ == "__main__":
-    test_queens()
+    solve_queens(pieces=8)
+    #test_queens()
