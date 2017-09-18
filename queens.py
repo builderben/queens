@@ -87,10 +87,10 @@ def solve_queens(pieces=8):
                             build_a_board[piece_number] = 0
                         break
                 test_row += 1
-            if build_a_board[piece_number] != 0:
+            if build_a_board[piece_number] != 0:  # go to next piece
                 piece_number += 1
                 test_row = 1
-            else:
+            else:                                 # back to previous piece
                 piece_number -= 1
                 test_row = build_a_board[piece_number] + 1
                 build_a_board[piece_number] = 0
@@ -110,5 +110,4 @@ def threatened(placed_vector, row):
     return False
 
 if __name__ == "__main__":
-    solve_queens(pieces=8)
-    #test_queens()
+    solve_queens(pieces=10)
